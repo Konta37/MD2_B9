@@ -1,9 +1,11 @@
 package BTThay.B1;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
+import java.text.ParseException;
 
-public class Customer extends ICustomer {
+public class Customer implements ICustomer {
     private String id;
     private String name;
     private boolean gender;
@@ -12,7 +14,8 @@ public class Customer extends ICustomer {
     private String email;
     private String phone;
 
-    public Customer(){}
+    public Customer() {
+    }
 
     public Customer(String id, String name, boolean gender, Date birthday, String address, String email, String phone) {
         this.id = id;
@@ -81,14 +84,55 @@ public class Customer extends ICustomer {
     }
 
     @Override
-    public void inputData(){
+    public void inputData() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the number of Custom");
-        int numberOfSongs = Integer.parseInt(sc.nextLine());
-        for (int i = 0; i < numberOfSongs; i++) {
-            Main.customersArray[i] = new Customer();
-//            MusicManagement.songsArray[MusicManagement.currentSongIndex].inputData(sc);
-//            MusicManagement.currentSongIndex++;
+        int numberOfCustomers = Integer.parseInt(sc.nextLine());
+        CustomerManager.customersArray = new Customer[numberOfCustomers];
+        for (int i = 0; i < numberOfCustomers; i++) {
+            CustomerManager.customersArray[i] = new Customer();
+            System.out.println("Enter customer " + (i + 1));
+            System.out.println("Enter id:");
+            CustomerManager.customersArray[i].setId(sc.nextLine());
+            System.out.println("Enter name:");
+            CustomerManager.customersArray[i].setName(sc.nextLine());
+            System.out.println("Enter gender:");
+            CustomerManager.customersArray[i].setGender(Boolean.parseBoolean(sc.nextLine()));
+            System.out.println("Enter birthday:");
+            SimpleDateFormat sf = new SimpleDateFormat("dd-MM-yyyy");
+            try {
+                java.util.Date utilDate = sf.parse(sc.nextLine());
+                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+                CustomerManager.customersArray[i].setBirthday(sqlDate);
+            } catch (ParseException e) {
+                System.out.println("Invalid date format. Please use dd-MM-yyyy.");
+                i--; // Decrement i to retry for the same customer
+                continue; // Skip the remaining input and retry for the same customer
+            }
+            System.out.println("Enter address:");
+            CustomerManager.customersArray[i].setAddress(sc.nextLine());
+            System.out.println("Enter phone:");
+            CustomerManager.customersArray[i].setPhone(sc.nextLine());
+            System.out.println("Enter email:");
+            CustomerManager.customersArray[i].setEmail(sc.nextLine());
+
+        }
+    }
+
+    @Override
+    public void displayData() {
+        System.out.printf("%-10s %-20s %-10s %-15s %-30s %-30s %-15s%n", "ID", "Name", "Gender", "Birthday", "Address", "Email", "Phone");
+        for (Customer customer : CustomerManager.customersArray) {
+            if (customer != null) {
+                System.out.printf("%-10s %-20s %-10s %-15s %-30s %-30s %-15s%n",
+                        customer.getId(),
+                        customer.getName(),
+                        customer.getGender() ? "Male" : "Female",
+                        customer.getBirthday().toString(),
+                        customer.getAddress(),
+                        customer.getEmail(),
+                        customer.getPhone());
+            }
         }
     }
 }
