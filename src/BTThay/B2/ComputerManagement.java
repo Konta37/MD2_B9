@@ -2,6 +2,8 @@ package BTThay.B2;
 
 import BTThay.B2.Product;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class ComputerManagement {
@@ -23,7 +25,17 @@ public class ComputerManagement {
 
         System.out.println("Thong tin may tinh");
         for (Computer c : list) {
-            System.out.println(c);
+            c.displayData();
+        }
+
+        Arrays.sort(list, new ProductPriceComparator());
+        for (Computer c : list) {
+            c.displayData();
+        }
+
+        Arrays.sort(list, new ProductNameComparator());
+        for (Computer c : list) {
+            c.displayData();
         }
     }
 }

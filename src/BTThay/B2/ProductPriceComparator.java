@@ -6,6 +6,6 @@ public class ProductPriceComparator implements Comparator<Computer> {
 
     @Override
     public int compare(Computer o1, Computer o2) {
-        return (int) o1.getImportPrice();
+        return (int) (o2.caculateSellPrice()-o1.caculateSellPrice());
     }
 }
